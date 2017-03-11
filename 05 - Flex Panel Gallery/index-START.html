@@ -24,6 +24,8 @@
     .panels {
       min-height:100vh;
       overflow: hidden;
+      display: flex;
+        /* This line changes images from horizontally split to vertically split */
     }
 
     .panel {
@@ -38,23 +40,52 @@
         font-size 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
         flex 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
         background 0.2s;
+        /* When the panel is given the `.open` class defined below, it does all this transition stuff defined here. */
       font-size: 20px;
       background-size:cover;
       background-position:center;
+      flex: 1;
+        /* What flex is doing here is distributing the images equally across the frame. `flex: 1;` means: distribute them evenly between each other. */
+      justify-content: center;
+        /* aligns things centered from horizontally */
+      align-items: center;
+      display: flex;
+        /* okay so `.panels` is a flex container for the entire panel. */
+        /* we're making each `.panel` a flex container as well. this currently defaults to stacking things left to right */
+      flex-direction: column;
+        /* This overrides the default left-to-right alignment of flex and makes them stacked vertically */
     }
 
 
     .panel1 { background-image:url(https://source.unsplash.com/gYl-UtwNg_I/1500x1500); }
     .panel2 { background-image:url(https://source.unsplash.com/1CD3fd8kHnE/1500x1500); }
     .panel3 { background-image:url(https://images.unsplash.com/photo-1465188162913-8fb5709d6d57?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&w=1500&h=1500&fit=crop&s=967e8a713a4e395260793fc8c802901d); }
-    .panel4 { background-image:url(https://source.unsplash.com/ITjiVXcwVng/1500x1500); }
-    .panel5 { background-image:url(https://source.unsplash.com/3MNzGlQM7qs/1500x1500); }
+    .panel4 { background-image:url(https://i.ytimg.com/vi/Cd2FHb-QS_E/maxresdefault.jpg); }
+    .panel5 { background-image:url(https://cdn03.bethesda.net/forum/uploads/1b40b956-efb4-446f-80c6-48a60b61eef8.jpg); }
 
+    /* flex items */
     .panel > * {
+      /* This is the panel children, which in this case, is the text of each panel, (e.g. 'Hey' 'Let's' 'Dance') */
       margin:0;
       width: 100%;
       transition:transform 0.5s;
+      /*border: 1px solid red;*/
+        /* just putting a border around the text to help visualize what's going on */
+      flex: 1 0 auto;
+        /* This breaks up the flex items evenly into 1/3rds */
+      display: flex;
+        /* aligns text to the left */
+        justify-content: center;
+        align-items: center;
+            /* with these, everything becomes perfectly centered */
     }
+
+    .panel > *:first-child { transform: translateY(-100%) }
+      /* moves the first child, (the first word in each panel) off-screen up */
+    .panel.open-active > *:first-child { transform: translateY(0%) } /* what these two lines are doing is giving it the ".open-active" class. if this class is present, the top/bottom panels respectively appears. if it is not present, the panels disappear. */
+    .panel > *:last-child { transform: translateY(100%) }
+      /* moves the last child, (the last word in each panel) off-screen down */
+    .panel.open-active > *:last-child { transform: translateY(0%) } /* what these two lines are doing is giving it the ".open-active" class. if this class is present, the top/bottom panels respectively appears. if it is not present, the panels disappear. */
 
     .panel p {
       text-transform: uppercase;
@@ -67,6 +98,8 @@
     }
 
     .panel.open {
+      flex: 5;
+        /* Flex of 1 means each item is going to take the same amount of room. A flex of 5 means it's going to take 5 TIMES the room of the rest of them. */
       font-size:40px;
     }
 
@@ -107,10 +140,28 @@
   </div>
 
   <script>
+    const panels = document.querySelectorAll('.panel') /* We're grabbing all the panels here */
+
+    function toggleOpen() {
+      this.classList.toggle('open');
+        // We're saying that the function `toggleOpen` means to toggle the class `.open` true or false
+    }
+
+    function toggleActive(e) {
+      // this.classList.toggle('open-active')
+        // We're not doing this because if you look at the class `.panel-open`, (line 100), you'll see that two things are being transitioned: flex, and font size.
+        // We only care about the flex-grow part.
+      if (e.propertyName.includes('flex')) { // Since some browsers look for "flex-open" while others just look for "flex", we're going to check to see if it INCLUDES the word "flex" first. THEN we do the toggling.
+        this.classList.toggle('open-active');
+      }
+    }
+
+    panels.forEach(panel => panel.addEventListener('click', toggleOpen));
+      // Loop over each panel in `panels`. listen for a click, and if it is clicked, run the function `toggleOpen`
+
+    panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
 
   </script>
-
-
 
 </body>
 </html>
