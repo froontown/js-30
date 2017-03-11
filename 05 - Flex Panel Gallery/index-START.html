@@ -25,6 +25,7 @@
       min-height:100vh;
       overflow: hidden;
       display: flex;
+        /* This line changes images from horizontally split to vertically split */
     }
 
     .panel {
@@ -43,6 +44,15 @@
       background-size:cover;
       background-position:center;
       flex: 1;
+        /* What flex is doing here is distributing the images equally across the frame. */
+      justify-content: center;
+        /* aligns things centered from horizontally */
+      align-items: center;
+      display: flex;
+        /* okay so `.panels` is a flex container for the entire panel. */
+        /* we're making each `.panel` a flex container as well. this currently defaults to stacking things left to right */
+      flex-direction: column;
+        /* This overrides the default left-to-right alignment of flex and makes them stacked vertically */
     }
 
 
@@ -52,11 +62,29 @@
     .panel4 { background-image:url(https://i.ytimg.com/vi/Cd2FHb-QS_E/maxresdefault.jpg); }
     .panel5 { background-image:url(https://cdn03.bethesda.net/forum/uploads/1b40b956-efb4-446f-80c6-48a60b61eef8.jpg); }
 
+    /* flex items */
     .panel > * {
+      /* This is the panel children, which in this case, is the text of each panel, (e.g. 'Hey' 'Let's' 'Dance') */
       margin:0;
       width: 100%;
       transition:transform 0.5s;
+      border: 1px solid red;
+        /* just putting a border around the text to help visualize what's going on */
+      flex: 1 0 auto;
+        /* This breaks up the flex items evenly into 1/3rds */
+      display: flex;
+        /* aligns text to the left */
+        justify-content: center;
+        align-items: center;
+            /* with these, everything becomes perfectly centered */
     }
+
+    .panel > *:first-child { transform: translateY(-100%) }
+      /* moves the first child, (the first word in each panel) off-screen up */
+    .panel.open-active > *:first-child { transform: translateY(0%) } /* what these two lines are doing is giving it the ".open-active" class. if this class is present, the top/bottom panels respectively appears. if it is not present, the panels disappear. */
+    .panel > *:last-child { transform: translateY(100%) }
+      /* moves the last child, (the last word in each panel) off-screen down */
+    .panel.open-active > *:last-child { transform: translateY(0%) } /* what these two lines are doing is giving it the ".open-active" class. if this class is present, the top/bottom panels respectively appears. if it is not present, the panels disappear. */
 
     .panel p {
       text-transform: uppercase;
@@ -111,8 +139,6 @@
   <script>
 
   </script>
-
-
 
 </body>
 </html>
