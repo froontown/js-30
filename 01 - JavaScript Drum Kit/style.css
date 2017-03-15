@@ -34,7 +34,7 @@ body,html {
 .playing {
   transform: scale(1.2);
   border-color: #D74F4F;
-  box-shadow: 0 0 9rem #878787;
+  box-shadow: 0 0 9rem #E14242;
 }
 
 kbd {
